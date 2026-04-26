@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book World – Contact</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d6efd;
+      min-height: 100vh;
+      padding-bottom: 2rem;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: #0a58ca;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-brand {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .navbar-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .navbar-links { display: flex; gap: 20px; }
+    .navbar-links a {
+      color: #cfe2ff;
+      font-size: 13px;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .navbar-links a:hover { color: white; }
+    .navbar-links a.active {
+      color: white;
+      font-weight: 600;
+      border-bottom: 2px solid #ffc107;
+      padding-bottom: 2px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 48px 16px 32px;
+      background: linear-gradient(135deg, #0a58ca, #0d6efd);
+    }
+    .hero-icon { font-size: 36px; color: #ffc107; margin-bottom: 8px; }
+    .hero h1 { font-size: 28px; font-weight: 500; color: white; letter-spacing: 1px; }
+    .hero p { color: #cfe2ff; margin-top: 6px; font-size: 14px; }
+
+    /* ── Container ── */
+    .container { max-width: 680px; margin: 28px auto 0; padding: 0 16px; }
+
+    /* ── Section label ── */
+    .section-label {
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    /* ── Info cards ── */
+    .info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .info-card {
+      background: #e8f0fe;
+      border-radius: 12px;
+      padding: 18px 12px;
+      text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .info-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+    .info-card .card-icon { font-size: 22px; color: #0a58ca; margin-bottom: 6px; }
+    .info-card .card-title { font-size: 13px; font-weight: 600; color: #000; }
+    .info-card .card-detail { font-size: 11px; color: #333; margin-top: 4px; }
+
+    /* ── Form card ── */
+    .form-section-label { color: white; font-size: 16px; font-weight: 500; text-align: center; margin: 28px 0 16px; }
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px 24px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #333;
+      background: #f9f9f9;
+      outline: none;
+      font-family: inherit;
+      transition: border-color .2s, box-shadow .2s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #0a58ca;
+      box-shadow: 0 0 0 3px rgba(10,88,202,.15);
+      background: white;
+    }
+    .form-group input.error,
+    .form-group textarea.error { border-color: #dc3545; }
+    .error-msg {
+      font-size: 11px;
+      color: #dc3545;
+      margin-top: 3px;
+      display: none;
+    }
+    .form-group textarea { height: 80px; }
+
+    /* ── Submit button ── */
+    #submitBtn {
+      width: 100%;
+      background: #0a58ca;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    #submitBtn:hover:not(:disabled) { background: #084298; }
+    #submitBtn:active:not(:disabled) { transform: scale(.98); }
+    #submitBtn:disabled { background: #6c9de0; cursor: not-allowed; }
+
+    /* ── Spinner ── */
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #198754;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+      opacity: 0;
+      z-index: 1000;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast.error-toast { background: #dc3545; }
+
+    /* ── Thank-you banner ── */
+    .thankyou-banner {
+      background: #e8f0fe;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .thankyou-banner strong { font-size: 14px; color: #000; }
+    .thankyou-banner p { font-size: 13px; color: #333; margin-top: 4px; }
+
+    /* ── Footer ── */
+    footer {
+      background: #0a58ca;
+      color: white;
+      text-align: center;
+      padding: 16px;
+      margin-top: 32px;
+      font-size: 13px;
+    }
+
+    /* ── Char counter ── */
+    .char-counter {
+      font-size: 11px;
+      color: #888;
+      text-align: right;
+      margin-top: 3px;
+    }
+    .char-counter.warn { color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="C:\Users\Arni\Downloads\image\logo.png" alt="Book World Logo" class="navbar-logo" />
+      BOOK WORLD
+    </div>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="categories.html">Books</a>
+      <a href="recommendations.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+      <a href="Signup_Page.html">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-icon">✉</div>
+    <h1>Contact Us</h1>
+    <p>We would love to hear from you</p>
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+    <div class="section-label">Get In Touch</div>
+
+    <!-- Info cards -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="card-icon">@</div>
+        <div class="card-title">Email</div>
+        <div class="card-detail">bookworld@gmail.com</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">☎</div>
+        <div class="card-title">Phone</div>
+        <div class="card-detail">+91 98765 43210</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">⊙</div>
+        <div class="card-title">Address</div>
+        <div class="card-detail">Chennai, Tamil Nadu</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-section-label">Send Us a Message</div>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Enter your name" maxlength="60" />
+          <div class="error-msg" id="nameErr">Please enter your name.</div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" maxlength="100" />
+          <div class="error-msg" id="emailErr">Enter a valid email address.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" placeholder="Enter subject" maxlength="120" />
+        <div class="error-msg" id="subjectErr">Please enter a subject.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Write your message here..." maxlength="500"></textarea>
+        <div class="char-counter" id="charCounter">0 / 500</div>
+        <div class="error-msg" id="messageErr">Please write a message (min 10 characters).</div>
+      </div>
+
+      <button id="submitBtn" type="button">
+        <span class="spinner" id="spinner"></span>
+        <span id="btnText">Send Message</span>
+      </button>
+    </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Footer -->
+  <footer>© 2025 BOOK WORLD &nbsp;|&nbsp; Made with love in Chennai, India</footer>
+
+  <script>
+    /* ── Utilities ── */
+    const $ = id => document.getElementById(id);
+
+    function showToast(msg, isError = false) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.className = isError ? 'error-toast' : '';
+      void t.offsetWidth;           // reflow to restart transition
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    function setError(inputId, errId, show) {
+      const input = $(inputId), err = $(errId);
+      if (show) {
+        input.classList.add('error');
+        err.style.display = 'block';
+      } else {
+        input.classList.remove('error');
+        err.style.display = 'none';
+      }
+      return !show;  // valid = no error shown
+    }
+
+    /* ── Validation ── */
+    function validateName() {
+      const v = $('name').value.trim();
+      return setError('name', 'nameErr', v.length < 2);
+    }
+    function validateEmail() {
+      const v = $('email').value.trim();
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      return setError('email', 'emailErr', !ok);
+    }
+    function validateSubject() {
+      const v = $('subject').value.trim();
+      return setError('subject', 'subjectErr', v.length < 2);
+    }
+    function validateMessage() {
+      const v = $('message').value.trim();
+      return setError('message', 'messageErr', v.length < 10);
+    }
+
+    /* ── Live validation on blur ── */
+    $('name').addEventListener('blur', validateName);
+    $('email').addEventListener('blur', validateEmail);
+    $('subject').addEventListener('blur', validateSubject);
+    $('message').addEventListener('blur', validateMessage);
+
+    /* ── Clear error on input ── */
+    ['name','email','subject','message'].forEach(id => {
+      $(id).addEventListener('input', () => {
+        $(id).classList.remove('error');
+        // keep error message hidden while user types
+      });
+    });
+
+    /* ── Character counter ── */
+    const msgArea = $('message'), counter = $('charCounter');
+    msgArea.addEventListener('input', () => {
+      const len = msgArea.value.length;
+      counter.textContent = `${len} / 500`;
+      counter.classList.toggle('warn', len >= 450);
+    });
+
+    /* ── Submit ── */
+    $('submitBtn').addEventListener('click', () => {
+      const ok = [validateName(), validateEmail(), validateSubject(), validateMessage()]
+                   .every(Boolean);
+      if (!ok) {
+        showToast('Please fix the errors above.', true);
+        return;
+      }
+
+      // Simulate sending
+      const btn = $('submitBtn'), spinner = $('spinner'), btnText = $('btnText');
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      btnText.textContent = 'Sending…';
+
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        btnText.textContent = 'Send Message';
+        btn.disabled = false;
+       window.location.href = 'thankyou.html';
+        // Reset form
+        ['name','email','subject','message'].forEach(id => {
+          $(id).value = '';
+          $(id).classList.remove('error');
+        });
+        counter.textContent = '0 / 500';
+        counter.classList.remove('warn');
+
+        showToast('✓ Message sent! We\'ll reply within 24 hours.');
+      }, 1800);
+    });
+
+    /* ── Info card click-to-copy ── */
+    document.querySelectorAll('.info-card').forEach(card => {
+      const detail = card.querySelector('.card-detail');
+      if (!detail) return;
+      card.style.cursor = 'pointer';
+      card.title = 'Click to copy';
+      card.addEventListener('click', () => {
+        navigator.clipboard.writeText(detail.textContent.trim())
+          .then(() => showToast(`Copied: ${detail.textContent.trim()}`))
+          .catch(() => showToast('Could not copy — try manually.', true));
+      });
+    });
+  </script>
+</body>
+</html>

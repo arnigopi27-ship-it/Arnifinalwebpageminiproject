@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book World – Sign Up</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d6efd;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: #0a58ca;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-brand {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .navbar-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .navbar-links a {
+      color: #cfe2ff;
+      font-size: 13px;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .navbar-links a:hover { color: white; }
+    .navbar-links a.active {
+      color: white;
+      font-weight: 600;
+      border-bottom: 2px solid #ffc107;
+      padding-bottom: 2px;
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    /* ── Card ── */
+    .signup-card {
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      animation: popUp .45s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popUp {
+      from { opacity: 0; transform: translateY(28px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 6px;
+    }
+    .card-sub {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    /* ── Form elements ── */
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .form-control, .form-select {
+      width: 100%;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 9px 11px;
+      background: #f9f9f9;
+      color: #333;
+      font-family: inherit;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #0a58ca;
+      box-shadow: 0 0 0 3px rgba(10,88,202,.15);
+      background: white;
+      outline: none;
+    }
+    .form-control.is-invalid, .form-select.is-invalid {
+      border-color: #dc3545 !important;
+    }
+    .err-msg {
+      font-size: 11px;
+      color: #dc3545;
+      margin-top: 3px;
+      display: none;
+    }
+
+    /* Password input + toggle button */
+    .pwd-wrap {
+      position: relative;
+    }
+    .pwd-wrap .form-control {
+      padding-right: 40px;
+    }
+    .pwd-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 15px;
+      padding: 0;
+      line-height: 1;
+    }
+    .pwd-toggle:hover { color: #0a58ca; }
+
+    /* Password strength */
+    .strength-bar {
+      height: 4px;
+      border-radius: 4px;
+      margin-top: 6px;
+      background: #e0e0e0;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width .3s, background .3s;
+    }
+    .strength-label { font-size: 11px; color: #888; margin-top: 3px; }
+
+    /* Gender row */
+    .gender-row { display: flex; gap: 20px; padding-top: 4px; flex-wrap: wrap; }
+    .gender-row label {
+      font-size: 13px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .gender-row input[type="radio"] { accent-color: #0a58ca; width: 15px; height: 15px; }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      background: #0a58ca;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: #084298; }
+    .btn-submit:active { transform: scale(.98); }
+
+    .login-link {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-top: 16px;
+    }
+    .login-link a { color: #0a58ca; font-weight: 600; text-decoration: none; }
+    .login-link a:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    footer {
+      background: #0a58ca;
+      color: white;
+      text-align: center;
+      padding: 14px;
+      font-size: 13px;
+    }
+
+    .mb-3 { margin-bottom: 14px; }
+    .mb-1 { margin-bottom: 4px; }
+    .mt-3 { margin-top: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+  <a class="navbar-brand" href="index.html">
+    <img src="C:\Users\Arni\Downloads\image\logo.png" width="60" alt="Logo">
+    <span style="color:white; font-size:22px; font-weight:800; letter-spacing:1px; font-family:'Segoe UI',sans-serif;">BOOK WORLD</span>
+  </a>
+  <div class="navbar-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="recommendations.html">Recommendations</a>
+    <a href="contact.html">Contact</a>
+    <a href="Signup_Page.html" class="active">Sign Up</a>
+  </div>
+</nav>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="signup-card">
+
+      <div class="card-title">📚 Create Your Account</div>
+      <div class="card-sub">Join Book World and discover your next favourite read</div>
+
+      <!-- Full Name -->
+      <div class="mb-3">
+        <label class="form-label" for="name">Full Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your name" maxlength="60" />
+        <div class="err-msg" id="nameErr">Please enter your full name (min 2 characters).</div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter your email" maxlength="100" />
+        <div class="err-msg" id="emailErr">Enter a valid email address.</div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-1">
+        <label class="form-label" for="password">Password</label>
+        <div class="pwd-wrap">
+          <input type="password" class="form-control" id="password" placeholder="Create a password" />
+          <button type="button" class="pwd-toggle" id="togglePwd" tabindex="-1">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
+        <div class="err-msg" id="pwdErr">Password must be at least 6 characters.</div>
+      </div>
+
+      <!-- Gender -->
+      <div class="mb-3 mt-3">
+        <label class="form-label">Gender</label>
+        <div class="gender-row">
+          <label><input type="radio" name="gender" value="Male" /> Male</label>
+          <label><input type="radio" name="gender" value="Female" /> Female</label>
+          <label><input type="radio" name="gender" value="Other" /> Other</label>
+        </div>
+        <div class="err-msg" id="genderErr">Please select your gender.</div>
+      </div>
+
+      <!-- Country -->
+      <div class="mb-3">
+        <label class="form-label" for="country">Country</label>
+        <select class="form-select" id="country">
+          <option value="">-- Select Country --</option>
+          <option>India</option>
+          <option>USA</option>
+          <option>UK</option>
+          <option>Australia</option>
+          <option>Canada</option>
+        </select>
+        <div class="err-msg" id="countryErr">Please select your country.</div>
+      </div>
+
+      <!-- Submit -->
+      <button type="button" class="btn-submit" id="submitBtn">Create Account</button>
+
+      <div class="login-link">
+        Already have an account? <a href="index.html">Go to Home</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>© 2025 BOOK WORLD &nbsp;|&nbsp; Made with love in Chennai, India</footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+
+    /* ── Password show/hide ── */
+    $('togglePwd').addEventListener('click', () => {
+      const pwd = $('password');
+      const icon = $('eyeIcon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+      } else {
+        pwd.type = 'password';
+        icon.className = 'bi bi-eye';
+      }
+    });
+
+    /* ── Password strength ── */
+    $('password').addEventListener('input', function () {
+      const val = this.value;
+      const fill = $('strengthFill');
+      const label = $('strengthLabel');
+      let s = 0;
+      if (val.length >= 6) s++;
+      if (val.length >= 10) s++;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val)) s++;
+      if (/[^A-Za-z0-9]/.test(val)) s++;
+      const levels = [
+        { w: '0%',   bg: '#e0e0e0', text: '' },
+        { w: '33%',  bg: '#dc3545', text: 'Weak' },
+        { w: '66%',  bg: '#ffc107', text: 'Medium' },
+        { w: '85%',  bg: '#0d6efd', text: 'Strong' },
+        { w: '100%', bg: '#198754', text: 'Very Strong' },
+      ];
+      fill.style.width = levels[s].w;
+      fill.style.background = levels[s].bg;
+      label.textContent = levels[s].text;
+      label.style.color = levels[s].bg;
+    });
+
+    /* ── Show / hide error helper ── */
+    function setErr(inputId, errId, show) {
+      const el = $(inputId);
+      const err = $(errId);
+      if (show) {
+        if (el) el.classList.add('is-invalid');
+        if (err) err.style.display = 'block';
+      } else {
+        if (el) el.classList.remove('is-invalid');
+        if (err) err.style.display = 'none';
+      }
+      return !show;
+    }
+
+    /* ── Clear errors on input ── */
+    ['name','email','password','country'].forEach(id => {
+      $(id).addEventListener('input', () => {
+        $(id).classList.remove('is-invalid');
+        const errEl = $(id + 'Err');
+        if (errEl) errEl.style.display = 'none';
+      });
+    });
+    document.querySelectorAll('input[name="gender"]').forEach(r => {
+      r.addEventListener('change', () => { $('genderErr').style.display = 'none'; });
+    });
+
+    /* ── Submit ── */
+    $('submitBtn').addEventListener('click', () => {
+      let valid = true;
+
+      // Name
+      const nameOk = $('name').value.trim().length >= 2;
+      if (!setErr('name', 'nameErr', !nameOk)) valid = false;
+
+      // Email
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value.trim());
+      if (!setErr('email', 'emailErr', !emailOk)) valid = false;
+
+      // Password
+      const pwdOk = $('password').value.length >= 6;
+      if (!setErr('password', 'pwdErr', !pwdOk)) valid = false;
+
+      // Gender
+      const genderOk = !!document.querySelector('input[name="gender"]:checked');
+      if (!genderOk) { $('genderErr').style.display = 'block'; valid = false; }
+      else { $('genderErr').style.display = 'none'; }
+
+      // Country
+      const countryOk = $('country').value !== '';
+      if (!setErr('country', 'countryErr', !countryOk)) valid = false;
+
+      if (!valid) return;
+
+      // ✅ All valid → redirect to Home page
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

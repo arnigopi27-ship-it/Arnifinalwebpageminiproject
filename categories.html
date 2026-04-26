@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Book Recommendation Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #E6F7FF;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .navbar-brand img {
+            margin-right: 10px;
+        }
+        .nav-link {
+            font-weight: bold;
+            color: #ffffff !important;
+            font-size: 16px;
+            padding: 10px 15px;
+        }
+        .nav-link:hover {
+            color: #cce7ff !important;
+        }
+        .nav-link.active-link {
+            border-bottom: 2px solid #fff;
+        }
+
+        /* ── HEADER ── */
+        .page-header {
+            text-align: center;
+            padding: 30px 15px 10px;
+        }
+        .page-header h2 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .page-header hr {
+            width: 100px;
+            border: 1px solid grey;
+            margin: 6px auto;
+        }
+        .page-header p {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-weight: bold;
+        }
+
+        /* ── CATEGORY CARDS ── */
+        .category-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: transform 0.28s, box-shadow 0.28s, border-bottom-color 0.28s;
+            border-bottom: 4px solid transparent;
+            height: 100%;
+        }
+        .category-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.14);
+            border-bottom-color: #0d6efd;
+        }
+        .category-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 14px;
+            transition: transform 0.3s;
+        }
+        .category-card:hover img {
+            transform: scale(1.08);
+        }
+        .category-card a {
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        .category-card a:hover {
+            color: #084298;
+            text-decoration: underline;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 40px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 576px) {
+            .category-card img {
+                width: 90px;
+                height: 90px;
+            }
+            .category-card {
+                padding: 20px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="C:\Users\Arni\Downloads\image\logo.png" width="60" height="60" alt="Book Logo">
+                BOOK WORLD
+            </a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarMenu"
+                    aria-controls="navbarMenu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active-link" href="categories.html">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="recommendations.html">Recommendations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                   </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section (same content as original) -->
+    <div class="page-header">
+        <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+            <a href="index.html">
+                <img src="C:\Users\Arni\Downloads\image\logo.png" alt="Book Logo" width="80" height="80">
+            </a>
+            <div>
+                <h2>BOOK WORLD</h2>
+            </div>
+        </div>
+        <p><b>Online Book Recommendation Portal</b></p>
+    </div>
+
+    <!-- Book Categories (same 6 categories, same links, same images) -->
+    <div class="container pb-5">
+        <div class="row g-4 justify-content-center">
+
+            <!-- Motivation & Journals -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\motivational.png" alt="Motivation">
+                    <br>
+                    <a href="https://www.gutenberg.org/" target="_blank"><b>Motivation & Journals</b></a>
+                </div>
+            </div>
+
+            <!-- Romance -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\romance.png" alt="Romance">
+                    <br>
+                    <a href="https://openlibrary.org/subjects/romance" target="_blank"><b>Romance</b></a>
+                </div>
+            </div>
+
+            <!-- Psychology -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\psycho.png" alt="Psychology">
+                    <br>
+                    <a href="https://openlibrary.org/subjects/psychology" target="_blank"><b>Psychology</b></a>
+                </div>
+            </div>
+
+            <!-- Humour -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\comedy.png" alt="Humour">
+                    <br>
+                    <a href="https://openlibrary.org/subjects/humor" target="_blank"><b>Humour</b></a>
+                </div>
+            </div>
+
+            <!-- Fantasy -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\fanstasy.png" alt="Fantasy">
+                    <br>
+                    <a href="https://openlibrary.org/subjects/fantasy" target="_blank"><b>Fantasy</b></a>
+                </div>
+            </div>
+
+            <!-- Programming & Education -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card">
+                    <img src="C:\Users\Arni\Downloads\image\programming.png" alt="Programming">
+                    <br>
+                    <a href="https://openlibrary.org/subjects/programming" target="_blank"><b>Programming & Education</b></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer (same content) -->
+    <footer class="bg-dark text-white text-center p-3 mt-4">
+        &copy; 2025 Online Book Recommendation Portal
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ── CARD ENTRANCE ANIMATION ON SCROLL ──
+        const cards = document.querySelectorAll('.category-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, i * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.28s, border-bottom-color 0.28s';
+            observer.observe(card);
+        });
+
+        // ── ACTIVE NAV LINK ──
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+                this.classList.add('active-link');
+            });
+        });
+    </script>
+</body>
+</html>
