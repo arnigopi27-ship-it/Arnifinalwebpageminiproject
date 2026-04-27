@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Book Recommendation Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #E6F7FF;
+            font-family: Arial, sans-serif;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .navbar-brand img { margin-right: 10px; }
+        .nav-link {
+            font-weight: bold;
+            color: #ffffff !important;
+            font-size: 16px;
+            padding: 10px 15px;
+        }
+        .nav-link:hover { color: #cce7ff !important; }
+        .nav-link.active-link { border-bottom: 2px solid #fff; }
+
+        .page-header {
+            text-align: center;
+            padding: 30px 15px 10px;
+        }
+        .page-header h2 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .page-header hr {
+            width: 100px;
+            border: 1px solid grey;
+            margin: 6px auto;
+        }
+        .page-header p {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-weight: bold;
+        }
+
+        .category-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: transform 0.28s, box-shadow 0.28s, border-bottom-color 0.28s;
+            border-bottom: 4px solid transparent;
+            height: 100%;
+            cursor: pointer;
+        }
+        .category-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.14);
+            border-bottom-color: #0d6efd;
+        }
+        .category-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 14px;
+            transition: transform 0.3s;
+        }
+        .category-card:hover img { transform: scale(1.08); }
+        .category-card .card-title {
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        /* ── STORE OVERLAY ── */
+        #store-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1050;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 30px 12px;
+            overflow-y: auto;
+        }
+        #store-overlay.open { display: flex; }
+        #store-panel {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            padding: 28px 24px 32px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #store-panel h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0d6efd;
+            margin-bottom: 4px;
+        }
+        #store-panel .subtitle {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        #close-store {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: #555;
+            cursor: pointer;
+        }
+        #close-store:hover { color: #000; }
+
+        /* Book cards inside store */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 18px;
+        }
+        .book-card {
+            background: #f5f9ff;
+            border-radius: 10px;
+            padding: 14px 10px 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.13);
+            text-decoration: none;
+            color: inherit;
+        }
+        .book-card img {
+            width: 90px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .book-card .book-title {
+            font-size: 0.82rem;
+            font-weight: bold;
+            color: #1a1a2e;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .book-card .book-author {
+            font-size: 0.75rem;
+            color: #555;
+        }
+        .no-cover {
+            width: 90px;
+            height: 120px;
+            border-radius: 6px;
+            background: #d0e4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 2rem;
+        }
+        #store-loading {
+            text-align: center;
+            padding: 40px 0;
+            color: #0d6efd;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        #store-error {
+            text-align: center;
+            padding: 30px 0;
+            color: #dc3545;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+
+        @media (max-width: 576px) {
+            .category-card img { width: 90px; height: 90px; }
+            .category-card { padding: 20px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="C:\Users\Arni\Downloads\image\logo.png" width="60" height="60" alt="Book Logo">
+                BOOK WORLD
+            </a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarMenu"
+                    aria-controls="navbarMenu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active-link" href="categories.html">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="recommendations.html">Recommendations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+            <a href="index.html">
+                <img src="C:\Users\Arni\Downloads\image\logo.png" alt="Book Logo" width="80" height="80">
+            </a>
+            <div>
+                <h2>BOOK WORLD</h2>
+            </div>
+        </div>
+        <p><b>Online Book Recommendation Portal</b></p>
+    </div>
+
+    <!-- Book Categories -->
+    <div class="container pb-5">
+        <div class="row g-4 justify-content-center">
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Motivation &amp; Journals', 'self_help', '💪')">
+                    <img src="C:\Users\Arni\Downloads\image\motivational.png" alt="Motivation" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Motivation &amp; Journals</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Romance', 'romance', '❤️')">
+                    <img src="C:\Users\Arni\Downloads\image\romance.png" alt="Romance" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Romance</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Psychology', 'psychology', '🧠')">
+                    <img src="C:\Users\Arni\Downloads\image\psycho.png" alt="Psychology" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Psychology</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Humour', 'humor', '😄')">
+                    <img src="C:\Users\Arni\Downloads\image\comedy.png" alt="Humour" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Humour</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Fantasy', 'fantasy', '🧙')">
+                    <img src="C:\Users\Arni\Downloads\image\fanstasy.png" alt="Fantasy" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Fantasy</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="category-card" onclick="openStore('Programming &amp; Education', 'programming', '💻')">
+                    <img src="C:\Users\Arni\Downloads\image\programming.png" alt="Programming" onerror="this.style.display='none'">
+                    <br>
+                    <span class="card-title">Programming &amp; Education</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Store Overlay -->
+    <div id="store-overlay">
+        <div id="store-panel">
+            <button id="close-store" onclick="closeStore()" title="Close">&times;</button>
+            <h3 id="store-title"></h3>
+            <p class="subtitle" id="store-subtitle"></p>
+            <div id="store-loading">Loading books...</div>
+            <div id="store-error" style="display:none;">Could not load books. Please check your connection.</div>
+            <div class="book-grid" id="book-grid" style="display:none;"></div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-3 mt-4">
+        &copy; 2025 Online Book Recommendation Portal
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ── CARD ENTRANCE ANIMATION ON SCROLL ──
+        const cards = document.querySelectorAll('.category-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, i * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.28s, border-bottom-color 0.28s';
+            observer.observe(card);
+        });
+
+        // ── ACTIVE NAV LINK ──
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+                this.classList.add('active-link');
+            });
+        });
+
+        // ── STORE OVERLAY ──
+        function openStore(label, subject, emoji) {
+            document.getElementById('store-title').textContent = emoji + ' ' + label + ' Books';
+            document.getElementById('store-subtitle').textContent = 'Browse popular titles in the ' + label + ' category from Open Library.';
+            document.getElementById('store-loading').style.display = 'block';
+            document.getElementById('store-error').style.display = 'none';
+            document.getElementById('book-grid').style.display = 'none';
+            document.getElementById('book-grid').innerHTML = '';
+            document.getElementById('store-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            fetchBooks(subject);
+        }
+
+        function closeStore() {
+            document.getElementById('store-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close on backdrop click
+        document.getElementById('store-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeStore();
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeStore();
+        });
+
+        async function fetchBooks(subject) {
+            try {
+                const url = `https://openlibrary.org/subjects/${subject}.json?limit=18`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Network error');
+                const data = await res.json();
+                renderBooks(data.works || []);
+            } catch (err) {
+                document.getElementById('store-loading').style.display = 'none';
+                document.getElementById('store-error').style.display = 'block';
+            }
+        }
+
+        function renderBooks(works) {
+            document.getElementById('store-loading').style.display = 'none';
+            const grid = document.getElementById('book-grid');
+
+            if (!works.length) {
+                grid.innerHTML = '<p style="color:#555;grid-column:1/-1;text-align:center;">No books found for this category.</p>';
+                grid.style.display = 'grid';
+                return;
+            }
+
+            works.forEach(book => {
+                const title = book.title || 'Unknown Title';
+                const author = (book.authors && book.authors[0] && book.authors[0].name) ? book.authors[0].name : 'Unknown Author';
+                const coverId = book.cover_id;
+                const olKey = book.key || '';
+                const bookUrl = olKey ? 'https://openlibrary.org' + olKey : 'https://openlibrary.org';
+
+                const card = document.createElement('a');
+                card.href = bookUrl;
+                card.target = '_blank';
+                card.className = 'book-card';
+                card.rel = 'noopener noreferrer';
+
+                let imgHtml;
+                if (coverId) {
+                    imgHtml = `<img src="https://covers.openlibrary.org/b/id/${coverId}-M.jpg" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="no-cover" style="display:none;">📖</div>`;
+                } else {
+                    imgHtml = `<div class="no-cover">📖</div>`;
+                }
+
+                card.innerHTML = `
+                    ${imgHtml}
+                    <div class="book-title">${escHtml(title)}</div>
+                    <div class="book-author">${escHtml(author)}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            grid.style.display = 'grid';
+        }
+
+        function escHtml(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+    </script>
+</body>
+</html>
