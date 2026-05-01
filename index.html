@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -469,12 +470,19 @@
         const overlay = $id('signupOverlay');
         overlay.classList.add('hide');
         showToast('✅ Account created! Welcome, ' + userName + '!');
-        setTimeout(() => overlay.remove(), 400);
+        /* Save to sessionStorage so signup won't show again in this session */
+        sessionStorage.setItem('bw_signed_up', 'yes');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 400);
       }, 1200);
     });
-    /* Show signup popup on page load */
+
+    /* Show signup popup on page load ONLY if not signed up in this session */
     window.addEventListener("load", function() {
-      document.getElementById("signupOverlay").classList.add("active");
+      if (sessionStorage.getItem('bw_signed_up') !== 'yes') {
+        document.getElementById("signupOverlay").classList.add("active");
+      }
     });
   </script>
 </body>
